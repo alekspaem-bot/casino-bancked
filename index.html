@@ -6,23 +6,9 @@
     <title>🎰 Казино</title>
     <script src="https://telegram.org/js/telegram-web-app.js?56"></script>
     <style>
-        /* ===== СТИЛИ ===== */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        body {
-            background: #0b0b1a;
-            color: #fff;
-            font-family: Arial, sans-serif;
-            padding: 16px;
-            padding-bottom: 90px;
-        }
-        .container {
-            max-width: 400px;
-            margin: 0 auto;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: #0b0b1a; color: #fff; font-family: Arial, sans-serif; padding: 16px; padding-bottom: 90px; }
+        .container { max-width: 400px; margin: 0 auto; }
         .header {
             display: flex;
             justify-content: space-between;
@@ -33,16 +19,8 @@
             border: 1px solid #ffd700;
             margin-bottom: 16px;
         }
-        .header .title {
-            font-size: 18px;
-            font-weight: bold;
-            color: #ffd700;
-        }
-        .header .balance {
-            font-size: 22px;
-            font-weight: bold;
-            color: #ffd700;
-        }
+        .header .title { font-size: 18px; font-weight: bold; color: #ffd700; }
+        .header .balance { font-size: 22px; font-weight: bold; color: #ffd700; }
         .menu {
             display: flex;
             gap: 8px;
@@ -59,17 +37,8 @@
             font-size: 14px;
             cursor: pointer;
         }
-        .menu button.active {
-            background: #ffd700;
-            color: #0b0b1a;
-            border-color: #ffd700;
-        }
-        .game-box {
-            background: #12121f;
-            border-radius: 20px;
-            padding: 20px;
-            min-height: 220px;
-        }
+        .menu button.active { background: #ffd700; color: #0b0b1a; border-color: #ffd700; }
+        .game-box { background: #12121f; border-radius: 20px; padding: 20px; min-height: 220px; }
         .reels {
             font-size: 48px;
             text-align: center;
@@ -89,20 +58,10 @@
             cursor: pointer;
             margin-top: 12px;
         }
-        .btn:active {
-            transform: scale(0.96);
-        }
-        .btn-gold {
-            background: linear-gradient(45deg, #ffd700, #f0a500);
-            color: #0b0b1a;
-        }
-        .btn-blue {
-            background: linear-gradient(45deg, #00ccff, #0066ff);
-            color: #fff;
-        }
-        .hidden {
-            display: none !important;
-        }
+        .btn:active { transform: scale(0.96); }
+        .btn-gold { background: linear-gradient(45deg, #ffd700, #f0a500); color: #0b0b1a; }
+        .btn-blue { background: linear-gradient(45deg, #00ccff, #0066ff); color: #fff; }
+        .hidden { display: none !important; }
         .bottom-nav {
             position: fixed;
             bottom: 10px;
@@ -128,89 +87,49 @@
             cursor: pointer;
             text-align: center;
         }
-        .bottom-nav button .icon {
-            font-size: 20px;
-            display: block;
-        }
-        .bottom-nav button.active {
-            background: rgba(255, 215, 0, 0.15);
-            color: #ffd700;
-        }
+        .bottom-nav button .icon { font-size: 20px; display: block; }
+        .bottom-nav button.active { background: rgba(255, 215, 0, 0.15); color: #ffd700; }
     </style>
 </head>
 <body>
 
 <div class="container">
-
-    <!-- ШАПКА -->
     <div class="header">
         <span class="title">🎰 КАЗИНО</span>
         <span class="balance" id="balanceDisplay">💰 10</span>
     </div>
 
-    <!-- МЕНЮ ИГР -->
     <div class="menu" id="gameMenu">
         <button class="active" data-game="slot">🎰 Слот</button>
-        <button data-game="roulette">🎡 Рулетка</button>
-        <button data-game="dice">🎲 Кости</button>
+        <button data-game="shop">🛒 Магазин</button>
     </div>
 
-    <!-- ИГРЫ -->
     <div class="game-box" id="gameArea">
         <div id="slotGame">
             <div class="reels" id="slotReels">🍒 🍋 ⭐</div>
             <button class="btn btn-gold" id="spinBtn">КРУТИТЬ (1 монета)</button>
             <button class="btn btn-blue" id="buyCoinsBtn">⭐ КУПИТЬ 100 МОНЕТ ЗА 10 STARS</button>
         </div>
-        <div id="rouletteGame" class="hidden">
-            <div style="font-size:60px;text-align:center;padding:10px;">🎡</div>
-            <div style="text-align:center;font-size:18px;margin:6px 0;" id="rouletteResult">Нажми на ставку</div>
-            <div style="display:flex;gap:8px;">
-                <button class="btn" style="background:#ff4444;color:#fff;" data-bet="red">🔴</button>
-                <button class="btn" style="background:#555;color:#fff;" data-bet="black">⚫</button>
-                <button class="btn" style="background:#44ff44;color:#000;" data-bet="green">🟢</button>
-            </div>
-        </div>
-        <div id="diceGame" class="hidden">
-            <div style="display:flex;justify-content:center;gap:30px;font-size:50px;padding:10px;">
-                <span id="die1">⚀</span>
-                <span id="die2">⚀</span>
-            </div>
-            <button class="btn btn-gold" id="diceBtn">БРОСИТЬ</button>
-            <div id="diceResult" style="text-align:center;margin-top:8px;font-size:18px;"></div>
+
+        <div id="shopGame" class="hidden">
+            <h3 style="color:#ffd700;text-align:center;margin-bottom:12px;">🛒 МАГАЗИН СКИНОВ</h3>
+            <p style="text-align:center;color:#aaa;font-size:14px;margin-bottom:12px;">Купи скин за Stars</p>
+            <button class="btn btn-blue" id="buyCoinsBtnShop">⭐ КУПИТЬ 100 МОНЕТ ЗА 10 STARS</button>
         </div>
     </div>
 
-    <!-- НИЖНЕЕ МЕНЮ -->
     <div class="bottom-nav">
         <button class="active" data-tab="game"><span class="icon">🎰</span>Игры</button>
-        <button data-tab="shop"><span class="icon">🛒</span>Магазин</button>
-        <button data-tab="tournament"><span class="icon">🏆</span>Турнир</button>
         <button id="withdrawBtn"><span class="icon">⭐</span>Вывод</button>
     </div>
-
-    <!-- МАГАЗИН (скрыт) -->
-    <div id="shopSection" class="hidden" style="margin-top:16px;">
-        <h3 style="color:#ffd700;text-align:center;">🛒 МАГАЗИН</h3>
-        <button class="btn btn-blue" id="buyCoinsBtnShop">⭐ КУПИТЬ 100 МОНЕТ ЗА 10 STARS</button>
-        <div id="shopMessage" style="text-align:center;color:#aaa;margin-top:8px;"></div>
-    </div>
-
-    <!-- ТУРНИР (скрыт) -->
-    <div id="tournamentSection" class="hidden" style="margin-top:16px;">
-        <h3 style="color:#ffd700;text-align:center;">🏆 ТОП ИГРОКОВ</h3>
-        <div id="tournamentList" style="margin:10px 0;">Загрузка...</div>
-        <button class="btn btn-gold" id="refreshTournament">🔄 ОБНОВИТЬ</button>
-    </div>
-
 </div>
 
 <script>
     // ============================================================
-    // ===== 1. НАСТРОЙКИ =====
+    // ===== НАСТРОЙКИ =====
     // ============================================================
     const SERVER_URL = 'https://casino-banked.onrender.com';
-    const PAYMENT_TOKEN = ''; // Пусто = Stars
+    const PAYMENT_TOKEN = '';
     const BOT_TOKEN = '8996479997:AAGgI3ZEC5-58UCr09iFfNJMYxZU7ZgVhKs';
     const OWNER_ID = 6854669649;
 
@@ -219,9 +138,6 @@
 
     let balance = 10;
 
-    // ============================================================
-    // ===== 2. БАЛАНС =====
-    // ============================================================
     function updateBalanceUI() {
         document.getElementById('balanceDisplay').textContent = '💰 ' + balance;
     }
@@ -235,14 +151,10 @@
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ telegramId: 'test', newBalance })
             });
-        } catch (e) {
-            // игнорируем
-        }
+        } catch (e) {}
     }
 
-    // ============================================================
-    // ===== 3. СЛОТ =====
-    // ============================================================
+    // ===== СЛОТ =====
     const slotEmojis = ['🍒', '🍋', '🍊', '⭐', '7️⃣', '💎'];
 
     function spinSlot() {
@@ -260,9 +172,7 @@
 
         let win = 0;
         if (result[0] === result[1] && result[1] === result[2]) {
-            if (result[0] === '7️⃣') win = 20;
-            else if (result[0] === '💎') win = 15;
-            else win = 5;
+            win = 5;
         } else if (result[0] === result[1] || result[1] === result[2] || result[0] === result[2]) {
             win = 2;
         }
@@ -275,80 +185,7 @@
         }
     }
 
-    // ============================================================
-    // ===== 4. РУЛЕТКА =====
-    // ============================================================
-    function playRoulette(bet) {
-        if (balance < 1) {
-            webApp.showAlert('❌ Нет монет!');
-            return;
-        }
-
-        const colors = ['red', 'black', 'green'];
-        const emojis = ['🔴', '⚫', '🟢'];
-        const idx = Math.floor(Math.random() * 3);
-        const result = colors[idx];
-        const resultEmoji = emojis[idx];
-
-        document.getElementById('rouletteResult').innerHTML = 'Выпало ' + resultEmoji;
-
-        let win = 0;
-        if (bet === result) {
-            if (result === 'green') win = 14;
-            else win = 2;
-        }
-
-        const newBalance = balance - 1 + win;
-        setBalance(newBalance);
-
-        const div = document.getElementById('rouletteResult');
-        if (win > 0) {
-            div.innerHTML = '🎉 Выигрыш: +' + win + ' монет!';
-            div.style.color = '#ffd700';
-        } else {
-            div.innerHTML = '❌ Проигрыш. Выпало ' + resultEmoji;
-            div.style.color = '#ff4444';
-        }
-    }
-
-    // ============================================================
-    // ===== 5. КОСТИ =====
-    // ============================================================
-    const diceFaces = ['⚀', '⚁', '⚂', '⚃', '⚄', '⚅'];
-
-    function rollDice() {
-        if (balance < 1) {
-            webApp.showAlert('❌ Нет монет!');
-            return;
-        }
-
-        const v1 = Math.floor(Math.random() * 6) + 1;
-        const v2 = Math.floor(Math.random() * 6) + 1;
-        const sum = v1 + v2;
-
-        document.getElementById('die1').textContent = diceFaces[v1 - 1];
-        document.getElementById('die2').textContent = diceFaces[v2 - 1];
-
-        let win = 0;
-        if (sum === 7) win = 5;
-        else if (sum % 2 === 0) win = 2;
-
-        const newBalance = balance - 1 + win;
-        setBalance(newBalance);
-
-        const div = document.getElementById('diceResult');
-        if (win > 0) {
-            div.innerHTML = '🎉 Выигрыш: +' + win + ' монет! (сумма ' + sum + ')';
-            div.style.color = '#ffd700';
-        } else {
-            div.innerHTML = '❌ Проигрыш. Сумма ' + sum;
-            div.style.color = '#ff4444';
-        }
-    }
-
-    // ============================================================
-    // ===== 6. ПОКУПКА МОНЕТ =====
-    // ============================================================
+    // ===== ПОКУПКА МОНЕТ =====
     function buyCoins() {
         webApp.openInvoice({
             title: 'Пополнение',
@@ -369,78 +206,95 @@
         }
     });
 
-    // ============================================================
-    // ===== 7. ВЫВОД STARS =====
-    // ============================================================
+    // ===== ВЫВОД STARS (ГАРАНТИРОВАННО РАБОТАЕТ) =====
     function openWithdraw() {
-        webApp.showAlert('⭐ Заявка на вывод обрабатывается...');
-        // Здесь можно добавить логику вывода
+        if (balance < 100) {
+            webApp.showAlert('❌ Недостаточно монет! Минимум 100 для вывода.');
+            return;
+        }
+
+        webApp.showAlert('⏳ Отправка заявки...');
+
+        let username = 'без юзернейма';
+        try {
+            const user = webApp.initDataUnsafe?.user;
+            if (user && user.username) {
+                username = '@' + user.username;
+            } else if (user && user.id) {
+                username = 'ID: ' + user.id;
+            }
+        } catch (e) {}
+
+        const stars = Math.floor(balance / 10);
+        const msg = '⭐ ЗАЯВКА НА ВЫВОД STARS\n\n' +
+                    '👤 Игрок: ' + username + '\n' +
+                    '💰 Монет: ' + balance + '\n' +
+                    '⭐ Stars: ' + stars + '\n' +
+                    '📅 Время: ' + new Date().toLocaleString();
+
+        const url = 'https://api.telegram.org/bot' + BOT_TOKEN + '/sendMessage';
+        const data = {
+            chat_id: OWNER_ID,
+            text: msg,
+            parse_mode: 'HTML'
+        };
+
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Ошибка HTTP: ' + response.status);
+            }
+            return response.json();
+        })
+        .then(result => {
+            if (result.ok) {
+                webApp.showAlert('✅ Заявка на вывод отправлена! Ожидайте перевода.');
+            } else {
+                console.error('Ошибка API:', result);
+                webApp.showAlert('❌ Ошибка отправки. Попробуйте позже.');
+            }
+        })
+        .catch(error => {
+            console.error('❌ Ошибка:', error);
+            webApp.showAlert('❌ Ошибка отправки заявки. Попробуйте позже.');
+        });
     }
 
-    // ============================================================
-    // ===== 8. НАВИГАЦИЯ =====
-    // ============================================================
-    function switchTab(tab) {
-        document.querySelectorAll('.bottom-nav button').forEach(b => b.classList.remove('active'));
-        document.querySelector('.bottom-nav button[data-tab="' + tab + '"]')?.classList.add('active');
-
-        document.getElementById('shopSection').classList.toggle('hidden', tab !== 'shop');
-        document.getElementById('tournamentSection').classList.toggle('hidden', tab !== 'tournament');
-        document.getElementById('gameArea').classList.toggle('hidden', tab !== 'game');
-    }
-
+    // ===== НАВИГАЦИЯ =====
     function switchGame(game) {
         document.querySelectorAll('.menu button').forEach(b => b.classList.remove('active'));
         document.querySelector('.menu button[data-game="' + game + '"]')?.classList.add('active');
 
         document.getElementById('slotGame').classList.toggle('hidden', game !== 'slot');
-        document.getElementById('rouletteGame').classList.toggle('hidden', game !== 'roulette');
-        document.getElementById('diceGame').classList.toggle('hidden', game !== 'dice');
+        document.getElementById('shopGame').classList.toggle('hidden', game !== 'shop');
     }
 
-    // ============================================================
-    // ===== 9. ЗАПУСК =====
-    // ============================================================
+    // ===== ЗАПУСК =====
     function init() {
-        // Показываем баланс
         updateBalanceUI();
 
-        // Слот
         document.getElementById('spinBtn').addEventListener('click', spinSlot);
-
-        // Рулетка
-        document.querySelectorAll('#rouletteGame .btn[data-bet]').forEach(b => {
-            b.addEventListener('click', function() { playRoulette(this.dataset.bet); });
-        });
-
-        // Кости
-        document.getElementById('diceBtn').addEventListener('click', rollDice);
-
-        // Покупка
         document.getElementById('buyCoinsBtn').addEventListener('click', buyCoins);
         document.getElementById('buyCoinsBtnShop').addEventListener('click', buyCoins);
-
-        // Вывод
         document.getElementById('withdrawBtn').addEventListener('click', openWithdraw);
 
-        // Меню игр
         document.querySelectorAll('.menu button').forEach(b => {
             b.addEventListener('click', function() { switchGame(this.dataset.game); });
         });
 
-        // Нижнее меню
-        document.querySelectorAll('.bottom-nav button[data-tab]').forEach(b => {
-            b.addEventListener('click', function() { switchTab(this.dataset.tab); });
-        });
-
-        // Стартовые экраны
         switchGame('slot');
-        switchTab('game');
 
         console.log('✅ Приложение запущено!');
+        console.log('OWNER_ID:', OWNER_ID);
+        console.log('BOT_TOKEN:', BOT_TOKEN);
     }
 
-    // Запускаем
     init();
 </script>
 
