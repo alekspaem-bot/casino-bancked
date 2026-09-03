@@ -18,7 +18,10 @@
             border-radius: 16px;
             border: 1px solid #ffd700;
             margin-bottom: 16px;
+            cursor: pointer;
+            transition: 0.2s;
         }
+        .header:active { transform: scale(0.98); }
         .header .title { font-size: 18px; font-weight: bold; color: #ffd700; }
         .header .balance { font-size: 22px; font-weight: bold; color: #ffd700; }
         .menu {
@@ -61,6 +64,9 @@
         .btn:active { transform: scale(0.96); }
         .btn-gold { background: linear-gradient(45deg, #ffd700, #f0a500); color: #0b0b1a; }
         .btn-blue { background: linear-gradient(45deg, #00ccff, #0066ff); color: #fff; }
+        .btn-green { background: linear-gradient(45deg, #44ff44, #00aa00); color: #0b0b1a; }
+        .btn-red { background: linear-gradient(45deg, #ff4444, #cc0000); color: #fff; }
+        .btn-purple { background: linear-gradient(45deg, #aa44ff, #6600cc); color: #fff; }
         .hidden { display: none !important; }
         .bottom-nav {
             position: fixed;
@@ -89,12 +95,54 @@
         }
         .bottom-nav button .icon { font-size: 20px; display: block; }
         .bottom-nav button.active { background: rgba(255, 215, 0, 0.15); color: #ffd700; }
+        .debug {
+            background: #1a1a2e;
+            padding: 10px;
+            border-radius: 10px;
+            margin-top: 10px;
+            font-size: 12px;
+            color: #aaa;
+            border: 1px solid #333;
+            word-break: break-all;
+        }
+        .dev-panel {
+            background: #0a0a1a;
+            padding: 12px;
+            border-radius: 12px;
+            margin-top: 12px;
+            border: 1px solid #aa44ff;
+            display: none;
+        }
+        .dev-panel.active {
+            display: block;
+        }
+        .dev-panel .dev-title {
+            color: #aa44ff;
+            font-size: 14px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        .dev-panel .dev-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 6px;
+        }
+        .dev-panel .dev-buttons button {
+            padding: 8px;
+            border: none;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .dev-panel .dev-buttons button:active { transform: scale(0.95); }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <div class="header">
+    <div class="header" id="headerTap">
         <span class="title">🎰 КАЗИНО</span>
         <span class="balance" id="balanceDisplay">💰 10</span>
     </div>
@@ -115,6 +163,24 @@
             <h3 style="color:#ffd700;text-align:center;margin-bottom:12px;">🛒 МАГАЗИН СКИНОВ</h3>
             <p style="text-align:center;color:#aaa;font-size:14px;margin-bottom:12px;">Купи скин за Stars</p>
             <button class="btn btn-blue" id="buyCoinsBtnShop">⭐ КУПИТЬ 100 МОНЕТ ЗА 10 STARS</button>
+        </div>
+
+        <div id="debugPanel" class="debug hidden">
+            <b>📡 Отладка:</b><br>
+            <span id="debugText">Ожидание...</span>
+        </div>
+
+        <!-- РЕЖИМ РАЗРАБОТЧИКА -->
+        <div class="dev-panel" id="devPanel">
+            <div class="dev-title">🛠️ РЕЖИМ РАЗРАБОТЧИКА</div>
+            <div class="dev-buttons">
+                <button class="btn-green" id="devAdd100">➕ +100</button>
+                <button class="btn-green" id="devAdd1000">➕ +1000</button>
+                <button class="btn-blue" id="devAdd5000">➕ +5000</button>
+                <button class="btn-purple" id="devTestWithdraw">⭐ Тест вывода</button>
+                <button class="btn-red" id="devReset">🔄 Сброс до 10</button>
+                <button class="btn-gold" id="devHide">❌ Скрыть</button>
+            </div>
         </div>
     </div>
 
@@ -138,6 +204,100 @@
 
     let balance = 10;
 
+    // ============================================================
+    // ===== РЕЖИМ РАЗРАБОТЧИКА =====
+    // ============================================================
+    let devMode = false;
+    let tapCount = 0;
+    let tapTimer = null;
+
+    function toggleDevMode() {
+        devMode = !devMode;
+        const panel = document.getElementById('devPanel');
+        if (devMode) {
+            panel.classList.add('active');
+            webApp.showAlert('🛠️ Режим разработчика включён!');
+        } else {
+            panel.classList.remove('active');
+            webApp.showAlert('🛠️ Режим разработчика выключен');
+        }
+    }
+
+    // Активация по 5 нажатиям на шапку
+    document.getElementById('headerTap').addEventListener('click', function() {
+        tapCount++;
+        clearTimeout(tapTimer);
+        tapTimer = setTimeout(() => { tapCount = 0; }, 2000);
+        if (tapCount >= 5) {
+            tapCount = 0;
+            toggleDevMode();
+        }
+    });
+
+    // ============================================================
+    // ===== ДЕВ-ФУНКЦИИ =====
+    // ============================================================
+    document.getElementById('devAdd100').addEventListener('click', function() {
+        const newBalance = balance + 100;
+        setBalance(newBalance);
+        webApp.showAlert('➕ +100 монет! Баланс: ' + newBalance);
+    });
+
+    document.getElementById('devAdd1000').addEventListener('click', function() {
+        const newBalance = balance + 1000;
+        setBalance(newBalance);
+        webApp.showAlert('➕ +1000 монет! Баланс: ' + newBalance);
+    });
+
+    document.getElementById('devAdd5000').addEventListener('click', function() {
+        const newBalance = balance + 5000;
+        setBalance(newBalance);
+        webApp.showAlert('➕ +5000 монет! Баланс: ' + newBalance);
+    });
+
+    document.getElementById('devReset').addEventListener('click', function() {
+        setBalance(10);
+        webApp.showAlert('🔄 Баланс сброшен до 10');
+    });
+
+    document.getElementById('devTestWithdraw').addEventListener('click', function() {
+        if (balance < 100) {
+            webApp.showAlert('❌ Добавь монет сначала (у тебя ' + balance + ')');
+            return;
+        }
+        const msg = '🧪 ТЕСТОВАЯ ЗАЯВКА (режим разработчика)\n\n' +
+                    '👤 Разработчик: @' + (webApp.initDataUnsafe?.user?.username || 'тест') + '\n' +
+                    '💰 Монет: ' + balance + '\n' +
+                    '⭐ Stars: ' + Math.floor(balance / 10) + '\n' +
+                    '📅 Время: ' + new Date().toLocaleString();
+
+        fetch('https://api.telegram.org/bot' + BOT_TOKEN + '/sendMessage', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ chat_id: OWNER_ID, text: msg, parse_mode: 'HTML' })
+        })
+        .then(r => r.json())
+        .then(result => {
+            if (result.ok) {
+                webApp.showAlert('✅ Тестовая заявка отправлена!');
+            } else {
+                webApp.showAlert('❌ Ошибка: ' + JSON.stringify(result));
+            }
+        })
+        .catch(() => {
+            webApp.showAlert('❌ Ошибка отправки');
+        });
+    });
+
+    document.getElementById('devHide').addEventListener('click', function() {
+        devMode = false;
+        document.getElementById('devPanel').classList.remove('active');
+        webApp.showAlert('🛠️ Режим разработчика скрыт');
+    });
+
+    // ============================================================
+    // ===== БАЛАНС =====
+    // ============================================================
     function updateBalanceUI() {
         document.getElementById('balanceDisplay').textContent = '💰 ' + balance;
     }
@@ -152,6 +312,13 @@
                 body: JSON.stringify({ telegramId: 'test', newBalance })
             });
         } catch (e) {}
+    }
+
+    function debug(msg) {
+        const panel = document.getElementById('debugPanel');
+        panel.classList.remove('hidden');
+        document.getElementById('debugText').textContent = msg;
+        console.log('🔍 DEBUG:', msg);
     }
 
     // ===== СЛОТ =====
@@ -206,14 +373,23 @@
         }
     });
 
-    // ===== ВЫВОД STARS (ГАРАНТИРОВАННО РАБОТАЕТ) =====
+    // ===== ВЫВОД =====
     function openWithdraw() {
+        debug('🔹 Нажата кнопка "Вывод"');
+        debug('Баланс: ' + balance);
+
         if (balance < 100) {
-            webApp.showAlert('❌ Недостаточно монет! Минимум 100 для вывода.');
+            debug('❌ Баланс меньше 100');
+            webApp.showAlert(
+                '❌ Недостаточно монет!\n\n' +
+                'Минимальный вывод — 100 монет (10 Stars).\n' +
+                'У вас: ' + balance + ' монет.\n\n' +
+                '💡 Накопите 100 монет или купите их за Stars.'
+            );
             return;
         }
 
-        webApp.showAlert('⏳ Отправка заявки...');
+        debug('✅ Баланс OK (>= 100)');
 
         let username = 'без юзернейма';
         try {
@@ -232,6 +408,8 @@
                     '⭐ Stars: ' + stars + '\n' +
                     '📅 Время: ' + new Date().toLocaleString();
 
+        debug('📨 Отправка сообщения...');
+
         const url = 'https://api.telegram.org/bot' + BOT_TOKEN + '/sendMessage';
         const data = {
             chat_id: OWNER_ID,
@@ -241,28 +419,25 @@
 
         fetch(url, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(data)
         })
         .then(response => {
-            if (!response.ok) {
-                throw new Error('Ошибка HTTP: ' + response.status);
-            }
+            debug('📨 Ответ получен, статус: ' + response.status);
+            if (!response.ok) throw new Error('HTTP ' + response.status);
             return response.json();
         })
         .then(result => {
+            debug('📨 Результат: ' + JSON.stringify(result));
             if (result.ok) {
                 webApp.showAlert('✅ Заявка на вывод отправлена! Ожидайте перевода.');
             } else {
-                console.error('Ошибка API:', result);
-                webApp.showAlert('❌ Ошибка отправки. Попробуйте позже.');
+                webApp.showAlert('❌ Ошибка отправки');
             }
         })
         .catch(error => {
-            console.error('❌ Ошибка:', error);
-            webApp.showAlert('❌ Ошибка отправки заявки. Попробуйте позже.');
+            debug('❌ Ошибка: ' + error.message);
+            webApp.showAlert('❌ Ошибка отправки заявки.');
         });
     }
 
@@ -273,6 +448,7 @@
 
         document.getElementById('slotGame').classList.toggle('hidden', game !== 'slot');
         document.getElementById('shopGame').classList.toggle('hidden', game !== 'shop');
+        document.getElementById('debugPanel').classList.add('hidden');
     }
 
     // ===== ЗАПУСК =====
@@ -291,8 +467,7 @@
         switchGame('slot');
 
         console.log('✅ Приложение запущено!');
-        console.log('OWNER_ID:', OWNER_ID);
-        console.log('BOT_TOKEN:', BOT_TOKEN);
+        console.log('🛠️ Чтобы включить режим разработчика — нажми 5 раз на шапку с балансом.');
     }
 
     init();
